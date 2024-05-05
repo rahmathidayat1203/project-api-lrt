@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->string('passport');
             $table->string('post_code');
+            $table->string('date_of_birth');
             $table->foreignId('id_city')->constrained('cities')->cascadeOnUpdate()->cascadeOnDelete();
             $table->timestamps();
         });

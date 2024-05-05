@@ -20,7 +20,9 @@ class AuthController extends Controller
                 'name' => 'required|string|max:255',
                 'email' => 'required|string|email|max:255|unique:users',
                 'password' => 'required|string|min:8',
-                'phone_number' => 'required',
+                'phone' => 'required',
+                'passport' => 'required',
+                'id_city' => 'required',
                 'date_of_birth' => 'required',
                 'foto' => 'required|mime:png,jpg'
             ]);
@@ -48,14 +50,21 @@ class AuthController extends Controller
             $extension = $extensions[$mime_type] ?? 'jpg';
             $filepath = 'foto/' . uniqid() . '.' . $extension;
             Storage::disk('public')->put($filepath, $decodedFoto);
-            User::create([
+            $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'foto' => Storage::url($filepath)
             ]);
             Passenger::create([
-                ''
+                'name' => $user->name,
+                'email' => $user->email,
+                'passport' => $request->passport,
+                'address' => $request->address,
+                'id_city' => $request->id_city,
+                'post_code' => $request->post_code,
+                'phone' => $request->phone,
+                'date_of_birth' => $request->date_of_birth
             ]);
             return response()->json(['message' => 'User registered successfully'], 201);
         } catch (\Exception $e) {
